@@ -1,0 +1,75 @@
+#%RAML 1.0
+title: Retrive-RoutesAndSchedules-System
+
+/{transportType}:
+  /{transportCompany}:
+    /routes:
+      get:
+        headers:
+          transactionId:
+            required: true
+            type: string
+            example: "geydeb-63grbe7-bfy3y36"
+        responses:
+          200:
+            body:
+              application/json:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    departureLocationCode:
+                      required: true
+                      type: string
+                      example: "BEN-SG"
+                    arrivalLocationCode:
+                      required: true
+                      type: string
+                      example: "KLG-MY"
+    /schedules:
+          get:
+            headers:
+              transactionId:
+                required: true
+                type: string
+                example: "geydeb-63grbe7-bfy3y36"
+            queryParameters:
+              departureLocationCode:
+                required: false
+                type: string
+                example: "BEN-SG"
+              destinationLocationCode:
+                required: false
+                type: string
+                example: "KLG-MY"
+            responses:
+              200:
+                body:
+                  application/json:
+                    type: array
+                    items: 
+                      type: object
+                      properties:
+                        availableSeats:
+                          required: true
+                          type: number
+                          example: 20
+                        departureDateTime:
+                          required: true
+                          type: string
+                          example: "2024-11-06T16:41:41.090Z"
+                        fromLocation:
+                          required: true
+                          type: string
+                        ToLocation:
+                          required: true
+                          type: string
+
+                            
+
+                      
+                  
+                    
+                            
+                  
+

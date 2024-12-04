@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<sub-flow name="travelOnTip-Schedules-ImplSub_Flow" doc:id="58003e64-8f38-43bf-93a7-5e0cd6e0e6eb" >
+		<http:request method="GET" doc:name="Request to the system" doc:id="321bbd56-85eb-4a9b-8cc6-a33bf2fb46d0" config-ref="HTTP_Request_configuration" path="${http.requester.schedulesPath}">
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"transactionId" : vars.transactionId
+}]]]></http:headers>
+		</http:request>
+		<logger level="INFO" doc:name="To log the payload" doc:id="4f77f461-49b1-4894-b8e6-78e02b9a1d15" message="#[payload]"/>
+	</sub-flow>
+</mule>
