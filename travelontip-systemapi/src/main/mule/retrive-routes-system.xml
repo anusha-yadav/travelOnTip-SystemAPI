@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
+    <flow name="retrive-routesandschedules-system-main">
+        <http:listener config-ref="retrive-routesandschedules-system-httpListenerConfig" path="/api/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="retrive-routesandschedules-system-config" />
+        <error-handler ref="Error_HandlerError_Handler" />
+    </flow>
+    <sub-flow name="retrive-routesandschedules-systemSub_Flow" doc:id="1082ee4c-6ace-49fe-a064-e4dac979e2d9">
+        <ee:transform doc:name="Storing header attributes" doc:id="7678e95a-de1f-4b62-a5dd-c9cb90daad13">
+            <ee:variables>
+                <ee:set-variable variableName="transportType"><![CDATA[attributes.uriParams.'transportType']]></ee:set-variable>
+                <ee:set-variable variableName="transportCompany"><![CDATA[attributes.uriParams.'transportCompany']]></ee:set-variable>
+                <ee:set-variable variableName="transactionId"><![CDATA[attributes.headers.transactionId]]></ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+    </sub-flow>
+    <flow name="get:\(transportType)\(transportCompany)\routes:retrive-routesandschedules-system-config" doc:id="f385bec8-b1dc-4408-b653-140cf29b18ca">
+        <flow-ref doc:name="Flow Reference" doc:id="eafa0886-6a56-41e9-8d25-54aacc6af4df" name="retrive-routesandschedules-systemSub_Flow" />
+        <logger level="INFO" doc:name="Trace log" doc:id="507155ed-d1ac-494f-ab42-4d241502c2b4" message="For transaction id #[vars.transactionId]" />
+        <flow-ref doc:name="Calling Imp flow" doc:id="9b9ad820-98f2-491a-9faa-5b7c49fb132f" name="travelOnTrip-Routes-ImplSub_Flow" />
+    </flow>
+</mule>
